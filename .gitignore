@@ -17,7 +17,8 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
-.env*
+# Keep .env.production for Infomaniak deploy
+!.env.production
 
 # Debug
 npm-debug.log*
@@ -53,3 +54,7 @@ IMAGENES/VIDEOS/**
 public/videos/full/**
 *.mov
 *.mp4
+
+# Large deploy artifacts
+*.zip
+.deploy/
