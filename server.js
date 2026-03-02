@@ -1,34 +1,27 @@
-const { spawn } = require("node:child_process");
-const { existsSync } = require("node:fs");
-const { join } = require("node:path");
+const http = require("node:http");
+const next = require("next");
 
-const port = process.env.PORT || "3000";
+const port = Number.parseInt(process.env.PORT || "3000", 10);
 const host = process.env.HOST || "0.0.0.0";
 
-const nextBinCandidates = [
-  join(__dirname, "node_modules", "next", "dist", "bin", "next"),
-  join(process.cwd(), "node_modules", "next", "dist", "bin", "next"),
-];
-
-const nextBin = nextBinCandidates.find((candidate) => existsSync(candidate));
-
-if (!nextBin) {
-  console.error(
-    "Next.js binary not found. Ensure dependencies are installed with `npm ci` before starting."
-  );
-  process.exit(1);
-}
-
-const child = spawn(process.execPath, [nextBin, "start", "-p", port, "-H", host], {
-  stdio: "inherit",
-  env: process.env,
+const app = next({
+  dev: false,
+  hostname: host,
+  port,
 });
 
-child.on("error", (error) => {
-  console.error("Failed to start Next.js:", error);
-  process.exit(1);
-});
+const handle = app.getRequestHandler();
 
-child.on("exit", (code) => {
-  process.exit(code ?? 0);
-});
+app
+  .prepare()
+  .then(() => {
+    http
+      .createServer((req, res) => handle(req, res))
+      .listen(port, host, () => {
+        console.log(`> Ready on http://${host}:${port}`);
+      });
+  })
+  .catch((error) => {
+    console.error("Failed to start Next.js:", error);
+    process.exit(1);
+  });
