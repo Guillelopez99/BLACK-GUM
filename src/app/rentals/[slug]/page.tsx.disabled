@@ -1,0 +1,87 @@
+﻿import Link from "next/link";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { formatCurrency, truncate } from "@/lib/utils";
+
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const rental = await prisma.rentalItem.findFirst({
+    where: { slug: params.slug, isActive: true }
+  });
+  if (!rental) {
+    return { title: "Alquiler no encontrado", description: "Alquiler no encontrado." };
+  }
+  return {
+    title: rental.name,
+    description: truncate(rental.specs)
+  };
+}
+
+export default async function RentalDetailPage({
+  params
+}: {
+  params: { slug: string };
+}) {
+  const rental = await prisma.rentalItem.findFirst({
+    where: { slug: params.slug, isActive: true }
+  });
+
+  if (!rental) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl px-6 py-16 space-y-10">
+      <p className="text-xs uppercase tracking-[0.3em] text-ember">
+        {rental.category} rental
+      </p>
+      <h1 className="text-4xl md:text-5xl font-display">{rental.name}</h1>
+      <p className="text-fog text-lg max-w-3xl">{rental.specs}</p>
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="border border-white/10 rounded-3xl p-6 bg-ink/70">
+          <p className="text-xs uppercase tracking-[0.2em] text-ember">Day rate</p>
+          <p className="text-2xl font-display mt-3">
+            {formatCurrency(rental.pricePerDay)}
+          </p>
+        </div>
+        <div className="border border-white/10 rounded-3xl p-6 bg-ink/70">
+          <p className="text-xs uppercase tracking-[0.2em] text-ember">
+            Weekend rate
+          </p>
+          <p className="text-2xl font-display mt-3">
+            {rental.weekendPrice
+              ? formatCurrency(rental.weekendPrice)
+              : "Custom"}
+          </p>
+        </div>
+        <div className="border border-white/10 rounded-3xl p-6 bg-ink/70">
+          <p className="text-xs uppercase tracking-[0.2em] text-ember">Deposit</p>
+          <p className="text-2xl font-display mt-3">
+            {formatCurrency(rental.deposit)}
+          </p>
+        </div>
+      </div>
+      <div className="border border-white/10 rounded-3xl p-6 bg-moss/40">
+        <p className="text-fog text-sm">In stock: {rental.stock}</p>
+        <Link
+          href="/contact"
+          className="inline-flex mt-6 bg-gum text-bone px-5 py-3 rounded-full text-sm uppercase tracking-[0.2em]"
+        >
+          Reserve gear
+        </Link>
+      </div>
+      <Link
+        href="/rentals"
+        className="text-sm uppercase tracking-[0.2em] text-ember"
+      >
+        <- Back to rentals
+      </Link>
+    </div>
+  );
+}

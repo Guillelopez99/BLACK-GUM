@@ -1,0 +1,57 @@
+﻿import Link from "next/link";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { truncate } from "@/lib/utils";
+
+export const revalidate = 60;
+
+export async function generateMetadata({
+  params
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const now = new Date();
+  const post = await prisma.post.findFirst({
+    where: { slug: params.slug, publishedAt: { not: null, lte: now } }
+  });
+  if (!post) {
+    return { title: "Publicación no encontrada", description: "Publicación no encontrada." };
+  }
+  return {
+    title: post.title,
+    description: truncate(post.excerpt)
+  };
+}
+
+export default async function BlogDetailPage({
+  params
+}: {
+  params: { slug: string };
+}) {
+  const now = new Date();
+  const post = await prisma.post.findFirst({
+    where: { slug: params.slug, publishedAt: { not: null, lte: now } }
+  });
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <div className="mx-auto max-w-3xl px-6 py-16 space-y-8">
+      <p className="text-xs uppercase tracking-[0.3em] text-ember">
+        {post.publishedAt ? post.publishedAt.toDateString() : "Draft"}
+      </p>
+      <h1 className="text-4xl md:text-5xl font-display">{post.title}</h1>
+      <p className="text-fog text-lg">{post.excerpt}</p>
+      <div className="text-fog leading-relaxed space-y-4">
+        {post.body.split("\n").map((paragraph, index) => (
+          <p key={`${post.id}-p-${index}`}>{paragraph}</p>
+        ))}
+      </div>
+      <Link href="/blog" className="text-sm uppercase tracking-[0.2em] text-ember">
+        <- Back to journal
+      </Link>
+    </div>
+  );
+}
