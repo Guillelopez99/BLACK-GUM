@@ -6,6 +6,11 @@ const nextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"]
+  },
+  // Limit build workers to avoid thread exhaustion on constrained hosts (Infomaniak)
+  experimental: {
+    cpus: 1,
+    workerThreads: false
   }
 };
 

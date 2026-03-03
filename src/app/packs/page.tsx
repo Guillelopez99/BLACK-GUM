@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Explora los paquetes creativos de Black Gum para sprints de contenido, lanzamientos de campaña y producción cinematográfica."
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function PacksPage({
   searchParams

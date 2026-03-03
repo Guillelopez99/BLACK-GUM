@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "Una selección curada de videoclips, contenido social y campañas cinematográficas de Black Gum Studio."
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function PortfolioPage() {
   const projects = await prisma.project.findMany({

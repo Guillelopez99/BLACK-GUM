@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency, truncate } from "@/lib/utils";
 import { parseDeliverables } from "@/lib/validation";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 const fallbackImage = "/paquetes/default.jpg";
 

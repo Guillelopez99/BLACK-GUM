@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Notas, aprendizajes y análisis desde el estudio de Black Gum y su proceso creativo."
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
   const now = new Date();

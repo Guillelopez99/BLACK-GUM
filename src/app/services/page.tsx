@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     "Servicios de producción de extremo a extremo: estrategia, rodaje y postproducción para marcas y creadores."
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({
