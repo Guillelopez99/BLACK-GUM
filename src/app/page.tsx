@@ -23,11 +23,23 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+async function getLatestProjects() {
+  try {
+    return await prisma.project.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 3
+    });
+  } catch (error) {
+    console.error("[home] Failed to load latest projects", {
+      hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
+      message: error instanceof Error ? error.message : "Unknown error"
+    });
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const latestProjects = await prisma.project.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 3
-  });
+  const latestProjects = await getLatestProjects();
 
   return (
     <div className="w-full home-main">
