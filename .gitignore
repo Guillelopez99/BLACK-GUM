@@ -49,13 +49,17 @@ next-env.d.ts
 .parcel-cache/
 .eslintcache
 
-# Large video files - use Git LFS or serve from CDN
+# Large source video files (raw footage, not used in production)
 IMAGENES/VIDEOS/**
-public/videos/full/**
 *.mov
+
+# All mp4 blocked by default (raw/unused)
 *.mp4
-# Exception: pack selector videos (needed on deploy)
+# Exceptions: videos actually used by the app
 !public/paquetes/*.mp4
+!public/textures/*.mp4
+!public/videos/previews/*.mp4
+!public/videos/full/*.mp4
 
 # Large deploy artifacts
 *.zip
