@@ -11,7 +11,7 @@
     "build:strict": "next build",
     "start": "next start",
     "postinstall": "node scripts/ensure-db.js",
-    "build:infomaniak": "node scripts/ensure-db.js && npx prisma generate && npx prisma db push --skip-generate && npx next build --no-lint",
+    "build:infomaniak": "node scripts/ensure-db.js && node node_modules/.bin/prisma generate && node node_modules/.bin/prisma db push --skip-generate && node node_modules/.bin/next build --no-lint",
     "start:infomaniak": "node node_modules/.bin/next start -H 0.0.0.0 -p ${PORT:-3000}",
     "lint": "next lint",
     "prisma:generate": "node scripts/ensure-db.js && npx prisma generate",
@@ -22,7 +22,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.10.0",
+    "@prisma/client": "5.22.0",
     "bcryptjs": "^2.4.3",
     "googleapis": "^171.4.0",
     "next": "^14.2.0",
@@ -41,7 +41,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.0",
     "postcss": "^8.4.35",
-    "prisma": "^5.10.0",
+    "prisma": "5.22.0",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.7.1",
     "typescript": "^5.4.2"
