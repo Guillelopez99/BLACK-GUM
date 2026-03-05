@@ -53,13 +53,10 @@ next-env.d.ts
 IMAGENES/VIDEOS/**
 *.mov
 
-# All mp4 blocked by default (raw/unused)
-*.mp4
-# Exceptions: videos actually used by the app
-!public/paquetes/*.mp4
-!public/textures/*.mp4
-!public/videos/previews/*.mp4
-!public/videos/full/*.mp4
+# IMPORTANT: do NOT globally ignore *.mp4.
+# Some deploy pipelines (including hosted Git builds) may consume .gitignore
+# patterns and drop runtime media assets from the deployed filesystem.
+# Keep ignores scoped to raw source folders only.
 
 # Large deploy artifacts
 *.zip
