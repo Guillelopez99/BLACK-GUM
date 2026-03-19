@@ -31,7 +31,6 @@ export default function DiaryMasonry({ videos, onSelect }: DiaryMasonryProps) {
               video={video}
               index={idx}
               onClick={() => onSelect(video)}
-              masonry
             />
           </div>
         ))}
